@@ -24,12 +24,15 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install flask pytest
+          pip install -r requirements.txt || true
 
       - name: Run final integration test
         run: |
-          pytest tests/ -v --tb=short
-          echo "✅ Integration tests passed!"
+          python -m pytest tests/ -v --tb=short || {
+            echo "❌ Integration tests failed";
+            false;
+          }
 
       - name: Generate deployment info
         run: |
